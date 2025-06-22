@@ -1,0 +1,6 @@
+@TechSummary_HostAddress = http://localhost:5064
+
+GET {{TechSummary_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
