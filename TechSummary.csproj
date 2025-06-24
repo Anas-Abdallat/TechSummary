@@ -23,8 +23,6 @@
     <Folder Include="DTOs\LoginDTO\Request\" />
     <Folder Include="Models\" />
     <Folder Include="Helper\" />
-    <Folder Include="Interface\" />
-    <Folder Include="Service\" />
   </ItemGroup>
 
 </Project>
