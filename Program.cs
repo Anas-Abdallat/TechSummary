@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TechSummary.Interface;
 using TechSummary.Models;
+using TechSummary.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TechSummaryContext>(options =>
     options.UseSqlServer("Data Source=DESKTOP-TAISUD8\\SQL2017;Initial Catalog=TechSummary;Integrated Security=True;Trust Server Certificate=True"));
-
+builder.Services.AddScoped<IAdminPanel, AdminPanelService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
