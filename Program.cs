@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using TechSummary.Interface;
 using TechSummary.Models;
+using TechSummary.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TechSummaryContext>(options =>
-    options.UseSqlServer("Data Source=DESKTOP-TAISUD8\\SQL2017;Initial Catalog=TechSummary;Integrated Security=True;Trust Server Certificate=True"));
+    options.UseSqlServer("Data Source=DESKTOP-E8UDJO1;Initial Catalog=TechSummary;Integrated Security=True;Trust Server Certificate=True"));
+
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
