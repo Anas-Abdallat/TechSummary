@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TechSummaryContext>(options =>
+
     options.UseSqlServer("Data Source=DESKTOP-E8UDJO1;Initial Catalog=TechSummary;Integrated Security=True;Trust Server Certificate=True"));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
