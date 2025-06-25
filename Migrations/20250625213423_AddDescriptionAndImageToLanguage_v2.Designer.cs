@@ -12,8 +12,8 @@ using TechSummary.Models;
 namespace TechSummary.Migrations
 {
     [DbContext(typeof(TechSummaryContext))]
-    [Migration("20250625204801_AddDescriptionAndImageToLanguage")]
-    partial class AddDescriptionAndImageToLanguage
+    [Migration("20250625213423_AddDescriptionAndImageToLanguage_v2")]
+    partial class AddDescriptionAndImageToLanguage_v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -145,6 +145,14 @@ namespace TechSummary.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()
