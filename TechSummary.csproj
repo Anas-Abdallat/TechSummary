@@ -20,13 +20,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-<<<<<<< FaeyzDev
-    <Folder Include="DTOs\LoginDTO\Request\" />
-    <Folder Include="Migrations\" />
-=======
->>>>>>> master
-    <Folder Include="Models\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="DTOs\LoginDTO\Request\" />
+		<Folder Include="Migrations\" />
+		<Folder Include="Models\" />
+	</ItemGroup>
+
 
 </Project>
