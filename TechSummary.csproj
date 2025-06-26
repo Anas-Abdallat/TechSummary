@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\LoginDTO\Request\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
