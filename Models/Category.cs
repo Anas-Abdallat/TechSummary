@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TechSummary.Models;
+﻿using TechSummary.Models;
 
 public partial class Category
 {
-    internal DateTime UpdatedAt;
-
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
-    public string Description { get; set; }
-    public string Image { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? Image { get; set; }
 
     public int? CreatedBy { get; set; }
 
@@ -22,6 +19,8 @@ public partial class Category
     public DateTime? CreationDate { get; set; }
 
     public DateTime? UpdatedDate { get; set; }
+
+  
 
     public virtual User? CreatedByNavigation { get; set; }
 
