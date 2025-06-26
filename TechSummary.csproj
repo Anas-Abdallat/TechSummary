@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DTOs\LoginDTO\**" />
+    <Content Remove="DTOs\LoginDTO\**" />
+    <EmbeddedResource Remove="DTOs\LoginDTO\**" />
+    <None Remove="DTOs\LoginDTO\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
       <PrivateAssets>all</PrivateAssets>
@@ -21,7 +28,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="DTOs\LoginDTO\Request\" />
 		<Folder Include="Migrations\" />
 		<Folder Include="Models\" />
 	</ItemGroup>
