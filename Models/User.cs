@@ -42,4 +42,6 @@ public partial class User
     public virtual LookupItem? Role { get; set; }
 
     public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
+
+
 }
