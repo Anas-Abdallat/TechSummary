@@ -21,6 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< FaeyzDev
+    <Folder Include="DTOs\LoginDTO\Request\" />
+    <Folder Include="Migrations\" />
+=======
+>>>>>>> master
     <Folder Include="Models\" />
   </ItemGroup>
 

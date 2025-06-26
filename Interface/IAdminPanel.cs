@@ -6,7 +6,6 @@ namespace TechSummary.Interface
     {
         Task<string> AddCategoryAsync(CategoryInpu input);
         Task<bool> UpdateCategoryAsync(UpdateCategoryInput input);
-        Task<bool> DeleteCategoryAsync(int id);
         Task<List<CategoryDto>> GetAllCategoriesAsync();
 
 
@@ -36,5 +35,6 @@ namespace TechSummary.Interface
         Task<UserDto> GetUserByIdAsync(int userId);
         Task<bool> BlockUserAsync(int userId);
         Task<bool> UnblockUserAsync(int userId);
+        Task<bool> DeleteCategoryAsync(int id);
     }
 }

@@ -12,8 +12,8 @@ using TechSummary.Models;
 namespace TechSummary.Migrations
 {
     [DbContext(typeof(TechSummaryContext))]
-    [Migration("20250625213423_AddDescriptionAndImageToLanguage_v2")]
-    partial class AddDescriptionAndImageToLanguage_v2
+    [Migration("20250625223726_AddDescriptionToCategory")]
+    partial class AddDescriptionToCategory
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,14 @@ namespace TechSummary.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -296,6 +304,10 @@ namespace TechSummary.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()

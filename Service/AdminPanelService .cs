@@ -55,19 +55,19 @@ namespace TechSummary.Service
         }
         public async Task<bool> UpdateCategoryAsync(UpdateCategoryInput input)
         {
-            var  Category = await _dbContext.Categories.FindAsync(input.Id);
-            if (Category == null)
-            { 
-            return false;
-            }
-            Category.Name = input.Name;
-            _dbContext.Categories.Update(Category);
+
+            if (input.Id <= 0 || string.IsNullOrWhiteSpace(input.Name))
+                return false;
+            var category = await _dbContext.Categories.FindAsync(input.Id);
+            if (category == null)
+                return false;
+            category.Name = input.Name;
+            category.Description = input.Description;
+            category.Image = input.Image;
+            _dbContext.Categories.Update(category);
             await _dbContext.SaveChangesAsync();
             return true;
         }
-
-        
-
         Task<bool> IAdminPanel.AddLanguageAsync(LanguageDto language)
         {
             throw new NotImplementedException();
@@ -88,11 +88,7 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.DeleteCategoryAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         Task<bool> IAdminPanel.DeleteContentAsync(int contentId)
         {
             throw new NotImplementedException();
@@ -108,10 +104,7 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<List<CategoryDto>> IAdminPanel.GetAllCategoriesAsync()
-        {
-            throw new NotImplementedException();
-        }
+        
 
         Task<List<UserDto>> IAdminPanel.GetAllUsersAsync()
         {
@@ -153,10 +146,6 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.UpdateCategoryAsync(UpdateCategoryInput input)
-        {
-            throw new NotImplementedException();
-        }
 
         Task<bool> IAdminPanel.UpdateLanguageAsync(int id, LanguageDto updatedLanguage)
         {
