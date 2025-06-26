@@ -21,9 +21,13 @@ namespace TechSummary.Service
             if (input.Name == null)
                 return "Category already exists.";
 
+            
             var newCategory = new Category
             {
-                Name = input.Name
+                Name = input.Name,
+                Description = input.Description,
+                Image = input.Image
+
             };
 
             _dbContext.Categories.Add(newCategory);
@@ -53,20 +57,21 @@ namespace TechSummary.Service
                 })
                 .ToListAsync();
         }
-        public async Task<bool> UpdateCategoryAsync(UpdateCategoryInput input)
+        public async Task<string> UpdateCategoryAsync(UpdateCategoryInput input)
         {
 
             if (input.Id <= 0 || string.IsNullOrWhiteSpace(input.Name))
-                return false;
+                return "invalid input";
+
             var category = await _dbContext.Categories.FindAsync(input.Id);
             if (category == null)
-                return false;
+                return "No category with tis id ";
             category.Name = input.Name;
             category.Description = input.Description;
             category.Image = input.Image;
             _dbContext.Categories.Update(category);
             await _dbContext.SaveChangesAsync();
-            return true;
+            return "updated";
         }
         Task<bool> IAdminPanel.AddLanguageAsync(LanguageDto language)
         {
@@ -131,30 +136,116 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<List<TopicDto>> IAdminPanel.GetTopicsByLanguageIdAsync(int languageId)
+        public async Task<List<TopicDto>> GetTopicsByLanguageIdAsync(int languageId)
         {
-            throw new NotImplementedException();
+            var topics = await _dbContext.Topics
+                .Where(t => t.LanguageId == languageId)
+                .Select(t => new TopicDto
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Description = t.Description
+                })
+                .ToListAsync();
+
+            return topics;
         }
 
-        Task<UserDto> IAdminPanel.GetUserByIdAsync(int userId)
+
+        public async Task<UserDto> GetUserByIdAsync(int userId)
+{
+    var user = await _dbContext.Users
+        .Where(u => u.Id == userId)
+        .Select(u => new UserDto
         {
-            throw new NotImplementedException();
+            Id = u.Id,
+            FullName = u.FullName,
+            Email = u.Email,
+            RoleId = u.RoleId,
+            IsActive = u.IsActive
+        })
+        .FirstOrDefaultAsync();
+
+    return user!;
+}
+
+
+       public async Task<bool> UnblockUserAsync(UserDto input)
+        {
+           
+            if (input.Id <= 0)
+                return false;
+
+            var user = await _dbContext.Users.FindAsync(input.Id);
+            if (user == null)
+                return false;
+            
+            if (user.RoleId == 1)
+                return false;
+
+
+            user.IsActive = true;
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+       
+
         }
 
-        Task<bool> IAdminPanel.UnblockUserAsync(int userId)
+
+        public async Task<string> UpdateLanguageAsync(LanguageDto input)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (input.Id <= 0 || string.IsNullOrWhiteSpace(input.Name))
+                    return "Invalid input";
+
+                var language = await _dbContext.Languages.FindAsync(input.Id);
+                if (language == null)
+                    return "No language with this ID";
+
+                language.Name = input.Name;
+                language.Description = input.Description;
+                language.Image = input.Image;
+
+                _dbContext.Languages.Update(language);
+                await _dbContext.SaveChangesAsync();
+
+                return "Updated successfully";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
         }
 
 
-        Task<bool> IAdminPanel.UpdateLanguageAsync(int id, LanguageDto updatedLanguage)
+        public async Task<string> UpdateTopicAsync(TopicDto input)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                if (input.Id <= 0 || string.IsNullOrWhiteSpace(input.Name))
+                    return "Invalid input";
 
-        Task<bool> IAdminPanel.UpdateTopicAsync(int id, TopicDto updatedTopic)
-        {
-            throw new NotImplementedException();
+                var Topic = await _dbContext.Topics.FindAsync(input.Id);
+                if (Topic == null)
+                    return "No language with this ID";
+
+                Topic.Name = input.Name;
+                Topic.Description = input.Description;
+                
+
+                _dbContext.Topics.Update(Topic);
+                await _dbContext.SaveChangesAsync();
+
+                return "Updated successfully";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
         }
     }
 }

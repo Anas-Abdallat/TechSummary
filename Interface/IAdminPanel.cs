@@ -1,25 +1,26 @@
 ﻿using TechSummary.DTOs.AdminPanel;
+using TechSummary.Models;
 
 namespace TechSummary.Interface
 {
     public interface IAdminPanel
     {
         Task<string> AddCategoryAsync(CategoryInpu input);
-        Task<bool> UpdateCategoryAsync(UpdateCategoryInput input);
+        Task<string> UpdateCategoryAsync(UpdateCategoryInput input);
         Task<List<CategoryDto>> GetAllCategoriesAsync();
 
 
 
 
         Task<bool> AddLanguageAsync(LanguageDto language);
-        Task<bool> UpdateLanguageAsync(int id, LanguageDto updatedLanguage);
+        Task<string> UpdateLanguageAsync(LanguageDto input);
         Task<bool> DeleteLanguageAsync(int id);
         Task<List<LanguageDto>> GetLanguagesByCategoryIdAsync(int categoryId);
         
         
         
         Task<bool> AddTopicAsync(TopicDto topic);
-        Task<bool> UpdateTopicAsync(int id, TopicDto updatedTopic);
+        Task<string> UpdateTopicAsync(TopicDto input);
         Task<bool> DeleteTopicAsync(int id);
         Task<List<TopicDto>> GetTopicsByLanguageIdAsync(int languageId);
 
@@ -34,7 +35,7 @@ namespace TechSummary.Interface
         Task<List<UserDto>> GetAllUsersAsync();
         Task<UserDto> GetUserByIdAsync(int userId);
         Task<bool> BlockUserAsync(int userId);
-        Task<bool> UnblockUserAsync(int userId);
+        Task<bool> UnblockUserAsync (UserDto input);
         Task<bool> DeleteCategoryAsync(int id);
     }
 }

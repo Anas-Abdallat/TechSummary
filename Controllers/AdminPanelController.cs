@@ -61,7 +61,7 @@ public class AdminPanelController : ControllerBase
             if (input.Id <= 0 || string.IsNullOrWhiteSpace(input.Name))
                 return BadRequest("Invalid category data.");
             var result = await _adminPanel.UpdateCategoryAsync(input);
-            if (result)
+            if (result == "updated")
                 return Ok("Category updated successfully.");
             else
                 return NotFound("Category not found.");
@@ -71,8 +71,31 @@ public class AdminPanelController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+    
+    [HttpGet("users/{userId}")]
+    public async Task<IActionResult> GetUserById(int userId)
+    {
+        var user = await _adminPanel.GetUserByIdAsync(userId);
+
+        if (user == null)
+            return NotFound("User not found.");
+
+        return Ok(user);
+    }
+
+    [HttpGet("topics/by-language/{languageId}")]
+    public async Task<IActionResult> GetTopicsByLanguageId(int languageId)
+    {
+        var topics = await _adminPanel.GetTopicsByLanguageIdAsync(languageId);
+
+        if (topics == null || !topics.Any())
+            return NotFound("No topics found for this language.");
+
+        return Ok(topics);
+    }
+
 
 
 }
 
-  
+
