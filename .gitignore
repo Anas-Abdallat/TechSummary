@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /Migrations/20250626012831_AddStudentBirthDate.cs
 /Migrations/20250626012831_AddStudentBirthDate.Designer.cs
 /Service/AuthService.cs
+/Service
