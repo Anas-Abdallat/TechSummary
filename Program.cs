@@ -18,6 +18,7 @@ builder.Services.AddDbContext<TechSummaryContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAdminPanel, AdminPanelService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IContentFilterService, ContentFilterService>();
 
 
 var app = builder.Build();
