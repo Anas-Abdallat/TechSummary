@@ -78,7 +78,7 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.AddTopicAsync(TopicDto topic)
+        public async Task<bool> AddTopicAsync(TopicDto input)
         {
             throw new NotImplementedException();
         }
@@ -108,8 +108,6 @@ namespace TechSummary.Service
         {
             throw new NotImplementedException();
         }
-
-        
 
         Task<List<UserDto>> IAdminPanel.GetAllUsersAsync()
         {
@@ -207,8 +205,10 @@ namespace TechSummary.Service
                     return "No language with this ID";
 
                 language.Name = input.Name;
-                language.Description = input.Description;
-                language.Image = input.Image;
+                language.Description = input.Description ?? string.Empty;
+                language.Image = input.Image ?? language.Image;
+                language.UpdatedDate = DateTime.Now;
+                language.UpdatedBy = 1;
 
                 _dbContext.Languages.Update(language);
                 await _dbContext.SaveChangesAsync();
@@ -220,8 +220,6 @@ namespace TechSummary.Service
                 return $"Error: {ex.Message}";
             }
         }
-
-
         public async Task<string> UpdateTopicAsync(TopicDto input)
         {
             try
