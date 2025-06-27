@@ -94,8 +94,27 @@ public class AdminPanelController : ControllerBase
         return Ok(topics);
     }
 
+    [HttpPut("[action]")]
+    public async Task<IActionResult> UpdateLanguageAsync(LanguageDto input)
+    {
+        try
+        {
+            var result = await _adminPanel.UpdateLanguageAsync(input);
 
+            return result switch
+            
+            {
+                "Updated successfully" => Ok(result),
+                "No language with this ID" => NotFound(result),
+                "Invalid input" => BadRequest(result),
+                _ when result.StartsWith("Error:") => StatusCode(500, result),
+                _ => StatusCode(500, "Unknown error occurred")
+            };
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 
 }
-
-
