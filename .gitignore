@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /DTOs/LoginDTO/Request
 /.gitignore
+/Migrations/20250626012831_AddStudentBirthDate.cs
+/Migrations/20250626012831_AddStudentBirthDate.Designer.cs
