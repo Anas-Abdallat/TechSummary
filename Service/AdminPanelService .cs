@@ -23,7 +23,10 @@ namespace TechSummary.Service
 
             var newCategory = new Category
             {
-                Name = input.Name
+                Name = input.Name,
+                Description = input.Description,
+                Image = input.Image
+
             };
 
             _dbContext.Categories.Add(newCategory);
