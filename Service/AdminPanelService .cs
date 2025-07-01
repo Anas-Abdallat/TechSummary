@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TechSummary.DTOs.AdminPanel;
+using TechSummary.Helper;
 using TechSummary.Interface;
 using TechSummary.Models;
 using TechSummary.Validators;
@@ -73,9 +75,21 @@ namespace TechSummary.Service
             await _dbContext.SaveChangesAsync();
             return "updated";
         }
-        Task<bool> IAdminPanel.AddLanguageAsync(LanguageDto language)
+        public async Task<bool> AddLanguageAsync(LanguageDto language)
         {
-            throw new NotImplementedException();
+           LanguageValidator.Validate(language, _dbContext);
+            if (language.Name == null)
+                return false;
+            var newLanguage = new Language
+            {
+                Name = language.Name,
+                Description = language.Description ?? string.Empty,
+                Image = language.Image ?? string.Empty,
+
+            };
+            _dbContext.Languages.Add(newLanguage);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> AddTopicAsync(TopicDto input)
@@ -93,25 +107,57 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-       
         Task<bool> IAdminPanel.DeleteContentAsync(int contentId)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.DeleteLanguageAsync(int id)
+        public async  Task<bool> DeleteLanguageAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _dbContext.Languages.FindAsync(id);
+            if (result==null)
+            {
+                return false;
+            }
+            _dbContext.Languages.Remove(result);
+            await _dbContext.SaveChangesAsync();
+            return true;
+
         }
 
-        Task<bool> IAdminPanel.DeleteTopicAsync(int id)
+        public async Task<bool> DeleteTopicAsync(int Id)
         {
-            throw new NotImplementedException();
+            var result = await _dbContext.Topics.FindAsync(Id);
+            if (result == null)
+            {
+                return false;
+            }
+
+            _dbContext.Topics.Remove(result);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
-        Task<List<UserDto>> IAdminPanel.GetAllUsersAsync()
+        public async Task<List<UserDto>>GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Users
+                    .Select(u => new UserDto
+                    {
+                        Id = u.Id,
+                        FullName = u.FullName,
+                        Email = u.Email,
+                        RoleId = u.RoleId,
+                        IsActive = u.IsActive
+                    })
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                
+                throw new Exception("Error retrieving users", ex);
+            }
         }
 
         Task<ContentDto> IAdminPanel.GetContentByIdAsync(int contentId)
@@ -124,9 +170,20 @@ namespace TechSummary.Service
             throw new NotImplementedException();
         }
 
-        Task<List<LanguageDto>> IAdminPanel.GetLanguagesByCategoryIdAsync(int categoryId)
+        public async Task<List<LanguageDto>> GetLanguagesByCategoryIdAsync(int categoryId)
         {
             throw new NotImplementedException();
+        
+            //var result = _dbContext.Languages
+            //    .Where(l => l.CategoryId == categoryId)
+            //    .Select(l => new LanguageDto
+            //    {
+            //        Id = l.Id,
+            //        Name = l.Name,
+            //        Description = l.Description,
+            //        Image = l.Image
+            //    })
+            //    .ToListAsync();
         }
 
         Task<List<ContentDto>> IAdminPanel.GetPendingContentsAsync()
@@ -191,7 +248,6 @@ namespace TechSummary.Service
        
 
         }
-
 
         public async Task<string> UpdateLanguageAsync(LanguageDto input)
         {
