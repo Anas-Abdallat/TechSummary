@@ -14,7 +14,7 @@ public class AdminPanelController : ControllerBase
     }
 
     [HttpPost("AddCategory")]
-    public async Task<IActionResult> AddCategory( CategoryInpu input)
+    public async Task<IActionResult> AddCategory(CategoryInpu input)
     {
         try
         {
@@ -48,10 +48,10 @@ public class AdminPanelController : ControllerBase
     }
     [HttpGet("GetAllCategories")]
     public async Task<IActionResult> GetAllCategories()
-        {
-            var categories = await _adminPanel.GetAllCategoriesAsync();
-            return Ok(categories);
-        }
+    {
+        var categories = await _adminPanel.GetAllCategoriesAsync();
+        return Ok(categories);
+    }
 
     [HttpPut("UpdateCategory")]
     public async Task<IActionResult> UpdateCategory(UpdateCategoryInput input)
@@ -71,7 +71,7 @@ public class AdminPanelController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
-    
+
     [HttpGet("users/{userId}")]
     public async Task<IActionResult> GetUserById(int userId)
     {
@@ -102,7 +102,7 @@ public class AdminPanelController : ControllerBase
             var result = await _adminPanel.UpdateLanguageAsync(input);
 
             return result switch
-            
+
             {
                 "Updated successfully" => Ok(result),
                 "No language with this ID" => NotFound(result),
@@ -117,4 +117,70 @@ public class AdminPanelController : ControllerBase
         }
     }
 
+    [HttpDelete("DeleteLanguage/{id}")]
+
+    public async Task<IActionResult> DeleteLanguageAsync(int id)
+    {
+        try
+        {
+            var result = await _adminPanel.DeleteLanguageAsync(id);
+            if (result)
+                return Ok("Language deleted successfully.");
+            else
+                return NotFound("Language not found.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+
+    }
+    
+    [HttpGet("[action]")]
+    public async Task<IActionResult> GetAllUsersAsync()
+    {
+        try
+        {
+            var users = await _adminPanel.GetAllUsersAsync();
+            return Ok(users);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpDelete("[action]/{Id}")]
+    public async Task<IActionResult> DeleteTopicAsync(int Id)
+    {
+        try
+        {
+            var result = await _adminPanel.DeleteTopicAsync(Id);
+
+            if (!result)
+                return NotFound($"No topic found with ID = {Id}");
+
+            return Ok("Topic deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    
+    [HttpPost("[action]")]
+    public async Task<IActionResult>AddLanguageAsync(LanguageDto language)
+    {
+        try
+        {
+            if (language == null)
+                return BadRequest("Language data is required.");
+            var result = await _adminPanel.AddLanguageAsync(language);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }

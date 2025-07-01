@@ -10,8 +10,6 @@ namespace TechSummary.Interface
         Task<List<CategoryDto>> GetAllCategoriesAsync();
 
 
-
-
         Task<bool> AddLanguageAsync(LanguageDto language);
         Task<string> UpdateLanguageAsync(LanguageDto input);
         Task<bool> DeleteLanguageAsync(int id);
@@ -21,7 +19,7 @@ namespace TechSummary.Interface
         
         Task<bool> AddTopicAsync(TopicDto topic);
         Task<string> UpdateTopicAsync(TopicDto input);
-        Task<bool> DeleteTopicAsync(int id);
+        Task<bool> DeleteTopicAsync(int Id);
         Task<List<TopicDto>> GetTopicsByLanguageIdAsync(int languageId);
 
        
