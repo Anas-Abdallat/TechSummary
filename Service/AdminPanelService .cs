@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
 using TechSummary.DTOs.AdminPanel;
 using TechSummary.Helper;
@@ -13,7 +14,7 @@ namespace TechSummary.Service
     {
         private readonly TechSummaryContext _dbContext;
 
-        public  AdminPanelService(TechSummaryContext dbContext)
+        public AdminPanelService(TechSummaryContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -23,7 +24,7 @@ namespace TechSummary.Service
             if (input.Name == null)
                 return "Category already exists.";
 
-            
+
             var newCategory = new Category
             {
                 Name = input.Name,
@@ -42,7 +43,7 @@ namespace TechSummary.Service
             var category = await _dbContext.Categories.FindAsync(id);
             if (category == null)
             {
-                return false; 
+                return false;
             }
 
             _dbContext.Categories.Remove(category);
@@ -77,7 +78,7 @@ namespace TechSummary.Service
         }
         public async Task<bool> AddLanguageAsync(LanguageDto language)
         {
-           LanguageValidator.Validate(language, _dbContext);
+            LanguageValidator.Validate(language, _dbContext);
             if (language.Name == null)
                 return false;
             var newLanguage = new Language
@@ -92,30 +93,52 @@ namespace TechSummary.Service
             return true;
         }
 
-        public async Task<bool> AddTopicAsync(TopicDto input)
+        public async Task<String> AddTopicAsync(TopicDto input)
+        {
+            try
+            {
+                TopicValidator.Validate(input, _dbContext);
+
+                var newTopic = new Topic
+                {
+                    Name = input.Name,
+                    Description = input.Description ?? string.Empty,
+                    LanguageId = input.Id,
+                    CreatedBy = 1,
+                    CreationDate = DateTime.Now,
+
+
+                };
+                _dbContext.Topics.Add(newTopic);
+                await _dbContext.SaveChangesAsync();
+                return "Topic added successfully.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
+
+        }
+
+        public async Task<bool> ApproveContentAsync(int contentId)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.ApproveContentAsync(int contentId)
+        public async Task<bool> BlockUserAsync(int userId)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.BlockUserAsync(int userId)
+        public async Task<bool> DeleteContentAsync(int contentId)
         {
             throw new NotImplementedException();
         }
 
-        Task<bool> IAdminPanel.DeleteContentAsync(int contentId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async  Task<bool> DeleteLanguageAsync(int id)
+        public async Task<bool> DeleteLanguageAsync(int id)
         {
             var result = await _dbContext.Languages.FindAsync(id);
-            if (result==null)
+            if (result == null)
             {
                 return false;
             }
@@ -138,7 +161,7 @@ namespace TechSummary.Service
             return true;
         }
 
-        public async Task<List<UserDto>>GetAllUsersAsync()
+        public async Task<List<UserDto>> GetAllUsersAsync()
         {
             try
             {
@@ -155,17 +178,17 @@ namespace TechSummary.Service
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception("Error retrieving users", ex);
             }
         }
 
-        Task<ContentDto> IAdminPanel.GetContentByIdAsync(int contentId)
+        public async Task<ContentDto> GetContentByIdAsync(int contentId)
         {
             throw new NotImplementedException();
         }
 
-        Task<List<ContentDto>> IAdminPanel.GetContentsByTopicIdAsync(int topicId)
+        public async Task<List<ContentDto>> GetContentsByTopicIdAsync(int topicId)
         {
             throw new NotImplementedException();
         }
@@ -173,7 +196,7 @@ namespace TechSummary.Service
         public async Task<List<LanguageDto>> GetLanguagesByCategoryIdAsync(int categoryId)
         {
             throw new NotImplementedException();
-        
+
             //var result = _dbContext.Languages
             //    .Where(l => l.CategoryId == categoryId)
             //    .Select(l => new LanguageDto
@@ -186,7 +209,7 @@ namespace TechSummary.Service
             //    .ToListAsync();
         }
 
-        Task<List<ContentDto>> IAdminPanel.GetPendingContentsAsync()
+        public async Task<List<ContentDto>> GetPendingContentsAsync()
         {
             throw new NotImplementedException();
         }
@@ -206,35 +229,33 @@ namespace TechSummary.Service
             return topics;
         }
 
-
         public async Task<UserDto> GetUserByIdAsync(int userId)
-{
-    var user = await _dbContext.Users
-        .Where(u => u.Id == userId)
-        .Select(u => new UserDto
         {
-            Id = u.Id,
-            FullName = u.FullName,
-            Email = u.Email,
-            RoleId = u.RoleId,
-            IsActive = u.IsActive
-        })
-        .FirstOrDefaultAsync();
+            var user = await _dbContext.Users
+                .Where(u => u.Id == userId)
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    RoleId = u.RoleId,
+                    IsActive = u.IsActive
+                })
+                .FirstOrDefaultAsync();
 
-    return user!;
-}
+            return user!;
+        }
 
-
-       public async Task<bool> UnblockUserAsync(UserDto input)
+        public async Task<bool> UnblockUserAsync(UserDto input)
         {
-           
+
             if (input.Id <= 0)
                 return false;
 
             var user = await _dbContext.Users.FindAsync(input.Id);
             if (user == null)
                 return false;
-            
+
             if (user.RoleId == 1)
                 return false;
 
@@ -245,7 +266,7 @@ namespace TechSummary.Service
             await _dbContext.SaveChangesAsync();
 
             return true;
-       
+
 
         }
 
@@ -289,7 +310,7 @@ namespace TechSummary.Service
 
                 Topic.Name = input.Name;
                 Topic.Description = input.Description;
-                
+
 
                 _dbContext.Topics.Update(Topic);
                 await _dbContext.SaveChangesAsync();
@@ -301,5 +322,33 @@ namespace TechSummary.Service
                 return $"Error: {ex.Message}";
             }
         }
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            try
+            {
+                List<string> ValidextentionFile = new List<string> { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
+                List<string> ValidextentionVedio = new List<string> { ".mp4", ".avi", ".mov", ".mkv" };
+
+                string extension = Path.GetExtension(file.FileName).ToLower();
+
+                if (!ValidextentionFile.Contains(extension) && !ValidextentionVedio.Contains(extension))
+                {
+                    return new BadRequestObjectResult("Invalid file type. Please upload a valid image or video file.");
+                }
+
+                if (file.Length > 5 * 1024 * 1024)
+                {
+                    return new BadRequestObjectResult("File size exceeds the limit of 5 MB.");
+                }
+
+                // هنا يمكنك كتابة منطق حفظ الملف أو أي عملية أخرى
+                return new OkObjectResult($"File '{file.FileName}' uploaded successfully.");
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult($"Error: {ex.Message}");
+            }
+        }
+
     }
 }
