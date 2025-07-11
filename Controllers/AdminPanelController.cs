@@ -183,4 +183,38 @@ public class AdminPanelController : ControllerBase
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> AddTopicAsync(TopicDto topic)
+    {
+        try
+        {
+            if (topic == null || string.IsNullOrWhiteSpace(topic.Name))
+                return BadRequest("Topic data is required.");
+            var result = await _adminPanel.AddTopicAsync(topic);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpPut("[action]")]
+    public async Task<IActionResult> UploadFile(IFormFile file)
+    {
+        try
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("File is required.");
+            var result = await _adminPanel.UploadFile(file);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+
 }
